@@ -1,22 +1,21 @@
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
 
-# Instalar dependencias necesarias para bcrypt
-RUN apk add --no-cache python3 make g++
-
+# Copiar solo package.json y package-lock.json (o yarn.lock)
 COPY package*.json ./
 
+# Instalar dependencias (se compilarán en el contenedor)
 RUN npm install --legacy-peer-deps
 RUN npm install @nestjs/config --legacy-peer-deps
+
+# Forzar recompilación de bcrypt
 RUN npm rebuild bcrypt --build-from-source
 
+# Copiar el resto del código (asegúrate de que .dockerignore excluya node_modules)
 COPY . .
 
-RUN npm run build
-
-# Generate Prisma Client
-COPY prisma ./prisma/
 RUN npx prisma generate
+RUN npm run build
 
 CMD ["npm", "run", "start"]
