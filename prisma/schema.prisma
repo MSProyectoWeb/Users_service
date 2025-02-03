@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Rol {
+  id          Int       @id @default(autoincrement())
+  nombre      String    @unique
+  descripcion String
+  Usuario     Usuario[]
+}
+
+model Usuario {
+  id          Int          @id @default(autoincrement())
+  rolId       Int
+  nombre      String
+  apellido    String
+  fechaNac    DateTime
+  direccion   String
+  cuenta      Cuenta?
+  suscripcion Suscripcion?
+  rol         Rol          @relation(fields: [rolId], references: [id])
+}
+
+model Suscripcion {
+  id            Int             @id @default(autoincrement())
+  usuarioId     Int             @unique
+  fechaCreacion DateTime        @default(now())
+  fechaFin      DateTime
+  tipo          TipoSuscripcion
+  usuario       Usuario         @relation(fields: [usuarioId], references: [id])
+}
+
+model Cuenta {
+  id                 Int     @id @default(autoincrement())
+  usuarioId          Int     @unique
+  username           String  @unique
+  password           String
+  correoRecuperacion String  @unique
+  usuario            Usuario @relation(fields: [usuarioId], references: [id])
+}
+
+enum TipoSuscripcion {
+  SEMANAL
+  MENSUAL
+  TRIMESTRAL
+  SEMESTRAL
+  ANUAL
+}
