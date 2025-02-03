@@ -68,7 +68,6 @@ export class UsersController {
     }
   }
 
-  @MessagePattern({ cmd: 'update_user_password' })
   async updatePassword(data: { correo: string; newPassword: string }) {
     try {
       if (!data.correo || !data.newPassword) {

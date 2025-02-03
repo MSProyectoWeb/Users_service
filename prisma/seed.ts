@@ -15,6 +15,13 @@ async function seed() {
       },
     });
 
+    const normalRol = await prisma.rol.create({
+      data: {
+        nombre: 'USUARIO',
+        descripcion: 'Usuario del sistema',
+      },
+    });
+
     // Crear usuario con cuenta
     const usuario = await prisma.usuario.create({
       data: {
