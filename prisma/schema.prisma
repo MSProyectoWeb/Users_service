@@ -51,3 +51,20 @@ enum TipoSuscripcion {
   SEMESTRAL
   ANUAL
 }
+
+model UserLog {
+  id        Int      @id @default(autoincrement())
+  action    String   // CREATE, UPDATE, DELETE, LOGIN, etc.
+  entity    String   // Usuario, Suscripcion, etc.
+  entityId  String?  
+  message   String   
+  metadata  Json?    // Datos adicionales del evento
+  level     LogLevel 
+  timestamp DateTime @default(now())
+}
+
+enum LogLevel {
+  INFO
+  WARNING
+  ERROR
+}
